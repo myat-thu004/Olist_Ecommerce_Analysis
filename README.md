@@ -1,96 +1,69 @@
 # E-Commerce Data Analysis and Preprocessing
 
 ## Overview
-This project focuses on the technical process of analyzing and preprocessing e-commerce datasets. The workflow includes data cleaning, feature engineering, and exploratory data analysis (EDA), leading to actionable insights about sales trends, customer behavior, and operational performance.
+This project focuses on the technical process of analyzing and preprocessing e-commerce datasets. The workflow includes data cleaning, feature engineering, exploratory data analysis (EDA), and clustering techniques to uncover insights into sales trends, customer behavior, and operational performance.
 
-## Technical Workflow
+## Key Technical Processes
 
-### 1. Data Import and Initialization
-- Utilize Python libraries such as `pandas`, `numpy`, and `matplotlib` for data manipulation and visualization.
-- Import datasets:
-  - `olist_orders_dataset.csv`
-  - `olist_order_items_dataset.csv`
-  - `olist_products_dataset.csv`
-  - `olist_customers_dataset.csv`
-  - `olist_order_reviews_dataset.csv`
+### Data Preparation
+1. **Data Discovery**:
+   - Used the Brazilian E-Commerce Public Dataset (2016-2018) from Kaggle.
+   - Integrated multiple datasets including orders, items, customers, products, and reviews.
 
-```python
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+2. **Data Profiling**:
+   - Identified missing values, feature distributions, and data types.
+   - Key findings:
+     - Orders dataset had ~0.8% missing values in date-related columns.
+     - Reviews dataset had ~36% missing text data.
+     - Payment and geolocation datasets had no missing values.
 
-order = pd.read_csv("olist_orders_dataset.csv")
-item = pd.read_csv("olist_order_items_dataset.csv")
-product = pd.read_csv("olist_products_dataset.csv")
-customer = pd.read_csv("olist_customers_dataset.csv")
-review = pd.read_csv("olist_order_reviews_dataset.csv")
-```
+3. **Data Cleaning**:
+   - Handled missing values by imputation or removal.
+   - Standardized timestamps for time-based analysis.
+   - Merged datasets for comprehensive analysis using keys like `order_id` and `customer_id`.
 
-### 2. Data Cleaning
-- Handle missing values by:
-  - Filling null values with relevant placeholders (e.g., estimated delivery dates).
-  - Dropping unnecessary columns after inspection.
-- Convert timestamp columns to datetime format for time-based analysis.
+### Analysis and Modeling
+1. **Exploratory Data Analysis (EDA)**:
+   - Analyzed revenue trends:
+     - Revenue increased significantly between 2016 and 2018.
+     - Peak sales occurred during Black Friday (November 24, 2017).
+   - Customer behavior:
+     - Most customers and sellers were concentrated in São Paulo.
+     - High satisfaction reflected in average review scores (mean: 4.09).
 
-```python
-order['purchase_time'] = pd.to_datetime(order['order_purchase_timestamp'])
-order['delivered_customer_date'].fillna(order['estimated_date'], inplace=True)
-order.drop(['order_purchase_timestamp', 'order_approved_at'], axis=1, inplace=True)
-```
+2. **Clustering**:
+   - Grouped sales data into clusters based on total sales, quantity, and shipping costs.
+     - Cluster C1: Small sales and low shipping costs.
+     - Cluster C2: High sales with minimal shipping costs.
+     - Cluster C3: Small sales but high shipping costs (large items).
 
-### 3. Feature Engineering
-- Merge datasets to enable comprehensive analysis.
-- Create new columns such as:
-  - `order_year` for annual trends.
-  - `order_month` for monthly breakdowns.
+3. **Linear Regression**:
+   - Built a model to predict total revenue based on review scores.
+   - Model explained ~65% of revenue variability, suggesting other influencing factors.
 
-```python
-order_item_data = pd.merge(order, item, on="order_id")
-order_item_data["order_year"] = order_item_data["purchase_time"].dt.year
-order_item_data["order_month"] = order_item_data["purchase_time"].dt.month
-```
+4. **Product Analysis**:
+   - Categorized products by price range and identified top-performing categories:
+     - Budget (<40): Home Appliances, Entertainment.
+     - Mid-range (40-135): Fashion, Food, Electronics.
+     - Premium (>135): Furniture, Telecommunication.
 
-### 4. Exploratory Data Analysis (EDA)
-- Conduct statistical summary and distribution checks for key columns.
-- Visualize sales trends:
-  - Yearly and monthly revenue breakdowns.
-  - Top-selling products and categories.
-  - Customer review scores and sentiments.
+## Key Insights and Recommendations
+1. **Revenue Trends**:
+   - Highest sales volumes in November, driven by Black Friday.
+   - Need to prepare for peak sales with improved server capacity and shipping efficiency.
 
-```python
-order_item_data.groupby("order_year").agg({"price": "sum"}).plot(kind="bar")
-plt.title("Yearly Revenue")
-plt.show()
-```
+2. **Customer Segmentation**:
+   - Customers in São Paulo are the primary revenue contributors.
+   - Focus on loyalty programs and personalized marketing for this region.
 
-### 5. Data Validation
-- Validate datasets by checking for inconsistencies:
-  - Shape and size of DataFrames.
-  - Presence of null or duplicate entries.
-- Ensure data type alignment for numerical and categorical fields.
+3. **Product Strategy**:
+   - Offer discounts and promotions for budget-friendly categories.
+   - Use loyalty programs for mid-range products.
+   - Premium products can benefit from personalized services and warranties.
 
-```python
-for name, df in {"Order": order, "Item": item}.items():
-    print(f"{name}: Shape {df.shape}, Missing Values {df.isna().sum().sum()}")
-```
-
-## Results
-- **Sales Trends**:
-  - Identified peak sales months and years.
-  - Established a positive trend in customer order growth.
-- **Customer Behavior**:
-  - Analyzed geographical and temporal order distributions.
-  - Revealed patterns in product preferences and customer reviews.
-- **Operational Insights**:
-  - Estimated delivery times and discrepancies.
-  - Identified bottlenecks in shipping timelines.
-
-## Visualizations
-Key visualizations include:
-- Yearly revenue trends.
-- Monthly sales performance.
-- Distribution of customer review scores.
-- Top-performing product categories.
+4. **Operational Efficiency**:
+   - Address delivery delays, especially orders exceeding a 10-day delay.
+   - Optimize shipping logistics for high-cost clusters.
 
 ## Usage
 1. Clone the repository and place datasets in the `data/` folder.
@@ -102,12 +75,6 @@ git clone https://github.com/your-repository/ecommerce-data-analysis.git
 cd ecommerce-data-analysis
 jupyter notebook olist_ecom.ipynb
 ```
-
-## Contributing
-Fork the repository and submit pull requests for improvements or new features.
-
-## License
-This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ## Acknowledgments
 The datasets are part of the Olist e-commerce dataset. Thanks to the Olist team for providing such a comprehensive dataset for public analysis.
