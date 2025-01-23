@@ -65,17 +65,6 @@ This project focuses on the technical process of analyzing and preprocessing e-c
    - Address delivery delays, especially orders exceeding a 10-day delay.
    - Optimize shipping logistics for high-cost clusters.
 
-## Usage
-1. Clone the repository and place datasets in the `data/` folder.
-2. Run the Jupyter Notebook `olist_ecom.ipynb` for data preprocessing and analysis.
-3. Review the output visualizations and summary tables.
-
-```bash
-git clone https://github.com/your-repository/ecommerce-data-analysis.git
-cd ecommerce-data-analysis
-jupyter notebook olist_ecom.ipynb
-```
-
 ## Acknowledgments
 The datasets are part of the Olist e-commerce dataset. Thanks to the Olist team for providing such a comprehensive dataset for public analysis.
 
